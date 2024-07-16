@@ -1,4 +1,5 @@
-﻿using OrderManagementSystem.Data.Entities.Basket;
+﻿using OrderManagementSystem.Data.Entities;
+using OrderManagementSystem.Data.Entities.Basket;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Talabat.Core.Entities.Basket
         public string Id { get; set; }
         public string? PaymentIntentId { get; set; }
         public string? ClientSecret { get; set; }
-
+        public PaymentMethod PaymentMethod { get; set; }
         public List<BasketItem> BasketItems { get; set; } = new List<BasketItem>();
         public CustomerBasket(string id)
         {

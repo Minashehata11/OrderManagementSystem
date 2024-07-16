@@ -25,7 +25,7 @@ namespace OrderManagementSystem.API.Controllers
             return product == null ? BadRequest(new ErrorApiResponse(404, "NotFound")) : Ok(product);
         }
         [HttpPost]
-        [Authorize(Roles ="Admin")]
+       [Authorize(Roles ="Admin")]
         public async Task<ActionResult<bool>> CreateProduct(CreateOrUpdateProductDto dto)
         => Ok(await _productService.CreateProduct(dto));
         [HttpPut("{productId}")]

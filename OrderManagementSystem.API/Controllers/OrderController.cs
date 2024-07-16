@@ -8,7 +8,6 @@ using OrderManagementSystem.Data.Entities.IdentityModels;
 using OrderManagementSystem.Services.Dtos;
 using OrderManagementSystem.Services.OrderServices;
 using System.Security.Claims;
-
 namespace OrderManagementSystem.API.Controllers
 {
 
@@ -53,7 +52,7 @@ namespace OrderManagementSystem.API.Controllers
         }
 
         [HttpPut("{orderId}")]
-        [Authorize(Roles = "Admin")]
+       [Authorize(Roles = "Admin")]
         public async Task<ActionResult<bool>> UpdateOrderStatus(int orderId, orderPaymentStatus orderPaymentStatus)
         {
             var UpdateSuccess=await _orderServices.UpdateOrderStatus(orderId, orderPaymentStatus);

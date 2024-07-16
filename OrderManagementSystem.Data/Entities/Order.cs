@@ -16,12 +16,12 @@ namespace OrderManagementSystem.Data.Entities
     }
     public enum PaymentMethod
     {
-        [EnumMember(Value = "CreditCard")]
+        [EnumMember(Value = "card")]
 
         CreditCard,
-        [EnumMember(Value = "PayPal")]
+        [EnumMember(Value = "Google Pay")]
 
-        PayPal
+        GooglePay
     }
     public class Order:BaseEntity
     {
@@ -34,7 +34,7 @@ namespace OrderManagementSystem.Data.Entities
 
         public DateTime OrderDate { get; set; } = DateTime.Now;
         public orderPaymentStatus Status { get; set; }= orderPaymentStatus.Pending;
-        public PaymentMethod PaymentMethod { get; set; }=PaymentMethod.PayPal;
+        public PaymentMethod PaymentMethod { get; set; }=PaymentMethod.CreditCard;
         public string? PaymentIntentId { get; set; }
         public decimal TotalAmount { get; set; }
         public IReadOnlyList<OrderItem> orderItems { get; set; } = new List<OrderItem>();   

@@ -20,7 +20,7 @@ namespace OrderManagementSystem.API.Controllers
         }
 
         [HttpPost]
-       // [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult<bool>> AddCustomer(ReqgisterOrLoginDto dto)
         {
             return await _customerService.CreateCustomer(dto) ? Ok("Added Succefully"): BadRequest("Not ADDed");

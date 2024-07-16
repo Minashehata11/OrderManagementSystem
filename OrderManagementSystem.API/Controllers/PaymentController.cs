@@ -8,7 +8,7 @@ using Talabate.PL.Dtos;
 
 namespace OrderManagementSystem.API.Controllers
 {
-
+    
     public class PaymentController : BaseController
     {
         private readonly IPaymentService _paymentService;

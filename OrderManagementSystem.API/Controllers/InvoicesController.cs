@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderManagementSystem.API.ErrorsHandle;
 using OrderManagementSystem.Data.Entities;
@@ -8,11 +9,12 @@ using OrderManagementSystem.Services.Dtos;
 namespace OrderManagementSystem.API.Controllers
 {
 
+        [Authorize(Roles ="Admin")]
     public class InvoicesController : BaseController
     {
+
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-
         public InvoicesController(IUnitOfWork unitOfWork,IMapper mapper)
         {
             _unitOfWork = unitOfWork;
