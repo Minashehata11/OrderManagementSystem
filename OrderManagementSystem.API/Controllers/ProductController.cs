@@ -19,6 +19,8 @@ namespace OrderManagementSystem.API.Controllers
         public async Task<ActionResult<IReadOnlyList<Product>>> GetAllOrder()
           => Ok(await _productService.GetAllProductAsync());
         [HttpGet("{productId}")]
+        [ProducesResponseType(typeof(Product), 200)]
+        [ProducesResponseType(typeof(ErrorApiResponse), 404)]
         public async Task<ActionResult<Product>> GetById(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -30,6 +32,7 @@ namespace OrderManagementSystem.API.Controllers
         => Ok(await _productService.CreateProduct(dto));
         [HttpPut("{productId}")]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(ErrorApiResponse), 404)]
 
         public async Task<ActionResult> UpdaetProduct(int productId, CreateOrUpdateProductDto dto)
         {

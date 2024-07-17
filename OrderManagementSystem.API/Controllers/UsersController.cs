@@ -46,6 +46,8 @@ namespace OrderManagementSystem.API.Controllers
             return Ok(returnedData);
         }
         [HttpPost("Login")]
+        [ProducesResponseType(typeof(UserDto), 200)]
+        [ProducesResponseType(typeof(ErrorApiResponse), 401)]
         public async Task<ActionResult<UserDto>> Login(ReqgisterOrLoginDto dto)
         {
             var user = await _userManager.FindByEmailAsync(dto.Email);

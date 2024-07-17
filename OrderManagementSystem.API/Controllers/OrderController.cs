@@ -25,6 +25,7 @@ namespace OrderManagementSystem.API.Controllers
         }
         [HttpPost]
         [Authorize]
+        [ProducesResponseType(typeof(Order), 200)]
         public async Task<ActionResult<Order>> CreateOrder(string BasketId)
         {
             var Email = User.FindFirstValue(claimType: ClaimTypes.Email);
@@ -34,7 +35,8 @@ namespace OrderManagementSystem.API.Controllers
             return orders is null ? BadRequest(new ErrorApiResponse(400, "Quantity Over Stock Or Product Not Found")) : Ok(orders);
         }
         [HttpGet]
-       [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin")]
+        [ProducesResponseType(typeof(OrderToResturnDto), 200)]
         public async Task<ActionResult<IReadOnlyList<OrderToResturnDto>>> GetAllOrders()
         {
             var orders = await _orderServices.GetAllOrdersAsync();
@@ -42,6 +44,8 @@ namespace OrderManagementSystem.API.Controllers
             return Ok(mappedOrder);
         }
         [HttpGet("{orderId}")]
+        [ProducesResponseType(typeof(UserDto), 200)]
+        [ProducesResponseType(typeof(OrderToResturnDto), 404)]
         public async Task<ActionResult<OrderToResturnDto>> GetOrder(int orderId)
         {
             var order = await _orderServices.GetOrderById(orderId);
@@ -52,7 +56,8 @@ namespace OrderManagementSystem.API.Controllers
         }
 
         [HttpPut("{orderId}")]
-       [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(ErrorApiResponse), 404)]
         public async Task<ActionResult<bool>> UpdateOrderStatus(int orderId, orderPaymentStatus orderPaymentStatus)
         {
             var UpdateSuccess=await _orderServices.UpdateOrderStatus(orderId, orderPaymentStatus);
