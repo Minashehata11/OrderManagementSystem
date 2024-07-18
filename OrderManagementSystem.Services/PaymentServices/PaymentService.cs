@@ -25,73 +25,70 @@ namespace OrderManagementSystem.Services.PaymentServices
             _emailService = emailService;
         }
 
-        public async Task<CustomerBasket> CreateOrUpdatePaymentforNewOrder(string BasketId)
-        {
-            // Secret Key
-            StripeConfiguration.ApiKey = _configuration["Strip:Secretkey"];
-            ////paypal
-            //var environment = new SandboxEnvironment(_configuration["PayPal:ClientId"], _configuration["Paypal:ClientSecret"]);
-            //var client = new PayPalHttpClient(environment);
-            // Get basket
-            var basket = await _basketRepository.GetBasketAsync(BasketId);
-            if (basket == null)
-                return null;
-
-            if (basket.BasketItems.Count > 0)
+            public async Task<CustomerBasket> CreateOrUpdatePaymentforNewOrder(string BasketId)
             {
-                foreach (var item in basket.BasketItems)
+                // Secret Key
+                StripeConfiguration.ApiKey = _configuration["Strip:Secretkey"];
+          
+                var basket = await _basketRepository.GetBasketAsync(BasketId);
+                if (basket == null)
+                    return null;
+
+                if (basket.BasketItems.Count > 0)
                 {
-                    var product = await _unitOfWork.Repository<Product>().GetById(item.ProductId);
-                    if (item.UnitPrice != product.Price)
-                        item.UnitPrice = product.Price;
+                    foreach (var item in basket.BasketItems)
+                    {
+                        var product = await _unitOfWork.Repository<Product>().GetById(item.ProductId);
+                        if (item.UnitPrice != product.Price)
+                            item.UnitPrice = product.Price;
+                    }
                 }
-            }
 
-            var subTotal = basket.BasketItems.Sum(items => (items.UnitPrice * items.Quantity) - items.Discound);
+                var subTotal = basket.BasketItems.Sum(items => (items.UnitPrice * items.Quantity) - items.Discound);
 
-            var service = new PaymentIntentService(); // Assuming this handles Stripe payments
-            PaymentIntent paymentIntent;
+                var service = new PaymentIntentService(); // Assuming this handles Stripe payments
+                PaymentIntent paymentIntent;
 
-            if (string.IsNullOrEmpty(basket.PaymentIntentId)) // Create
-            {
-                var options = new PaymentIntentCreateOptions
+                if (string.IsNullOrEmpty(basket.PaymentIntentId)) // Create
                 {
-                    Amount = (long)(subTotal * 100),
-                    Currency = "usd",
-                    PaymentMethodTypes = new List<string>() // Define allowed payment methods
-            {
-                "card",
-                "Google Pay"
-            }
-                };
+                    var options = new PaymentIntentCreateOptions
+                    {
+                        Amount = (long)(subTotal * 100),
+                        Currency = "eur",
+                        PaymentMethodTypes = new List<string>() // Define allowed payment methods
+                {
+                    "card",
+                    "ideal"
+                }
+                    };
 
                
-                    paymentIntent = await service.CreateAsync(options);
+                        paymentIntent = await service.CreateAsync(options);
                
               
 
-                basket.PaymentIntentId = paymentIntent?.Id; 
-                basket.ClientSecret = paymentIntent?.ClientSecret; 
-            }
-            else // Update
-            {
-                var updateOptions = new PaymentIntentUpdateOptions
+                    basket.PaymentIntentId = paymentIntent?.Id; 
+                    basket.ClientSecret = paymentIntent?.ClientSecret; 
+                }
+                else // Update
                 {
-                    Amount = (long)(subTotal * 100),
-                };
+                    var updateOptions = new PaymentIntentUpdateOptions
+                    {
+                        Amount = (long)(subTotal * 100),
+                    };
 
                
-                    paymentIntent = await service.UpdateAsync(basket.PaymentIntentId, updateOptions);
+                        paymentIntent = await service.UpdateAsync(basket.PaymentIntentId, updateOptions);
                 
               
 
-                basket.PaymentIntentId = paymentIntent?.Id;
-                basket.ClientSecret = paymentIntent?.ClientSecret;
-            }
+                    basket.PaymentIntentId = paymentIntent?.Id;
+                    basket.ClientSecret = paymentIntent?.ClientSecret;
+                }
 
-            await _basketRepository.UpdateBasketAsync(basket);
-            return basket;
-        }
+                await _basketRepository.UpdateBasketAsync(basket);
+                return basket;
+            }
 
 
         public async Task<Data.Entities.Order> UpdatePaymentIntentToSucceedOrfailed(string paymentIntentId, bool flag)

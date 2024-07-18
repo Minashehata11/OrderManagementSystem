@@ -27,6 +27,8 @@ namespace OrderManagementSystem.Services.OrderServices
         public async Task<Order> CreateOrderAsync(string CustomerId, string basketId)
         {
             var basket = await _basket.GetBasketAsync(basketId);
+            if (basket is null)
+                return null;
             var orderItems = new List<OrderItem>();
             var orderitem= new OrderItem();
             var product= new Product();
@@ -116,7 +118,7 @@ namespace OrderManagementSystem.Services.OrderServices
             var order = await _unitOfWork.Repository<Order>().GetByIdAsyncWithSpecification(spec);
             if(order == null) return false;
             var email = order.Customer.Email;
-            order.Status=orderPaymentStatus.Recieve;
+            order.Status=orderPaymentStatus;
             EmailSetting emailSetting = new EmailSetting()
             {
                 Body = $"{orderPaymentStatus.ToString()}",

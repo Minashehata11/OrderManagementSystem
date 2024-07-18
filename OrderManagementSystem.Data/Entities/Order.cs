@@ -19,9 +19,9 @@ namespace OrderManagementSystem.Data.Entities
         [EnumMember(Value = "card")]
 
         CreditCard,
-        [EnumMember(Value = "Google Pay")]
+        [EnumMember(Value = "IDeal")]
 
-        GooglePay
+        IDeal
     }
     public class Order:BaseEntity
     {

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderManagementSystem.API.ErrorsHandle;
 using OrderManagementSystem.Services.CustomerService;
@@ -8,7 +7,7 @@ using OrderManagementSystem.Services.Dtos;
 
 namespace OrderManagementSystem.API.Controllers
 {
-    
+
     public class CustomerController : BaseController
     {
         private readonly ICustomerService _customerService;
@@ -21,9 +20,9 @@ namespace OrderManagementSystem.API.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin")]
         [ProducesResponseType(typeof(ErrorApiResponse), 400)]
-        public async Task<ActionResult<bool>> AddCustomer(ReqgisterOrLoginDto dto)
+        public async Task<ActionResult<bool>> AddCustomer([FromForm]ReqgisterOrLoginDto dto)
         {
             return await _customerService.CreateCustomer(dto) ? Ok("Added Succefully"): BadRequest(new ErrorApiResponse(400));
         }

@@ -9,7 +9,7 @@ namespace OrderManagementSystem.Services.Dtos
 {
     public class InvoiceDto
     {
-        public int? OrderId { get; set; }
+        public int Id { get; set; }
         public DateTime InvoiceDate { get; set; } 
         public decimal TotalAmount { get; set; }
     }

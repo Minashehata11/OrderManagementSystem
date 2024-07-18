@@ -36,7 +36,7 @@ namespace OrderManagementSystem.API.Controllers
         }
         [HttpGet]
         [Authorize(Roles ="Admin")]
-        [ProducesResponseType(typeof(OrderToResturnDto), 200)]
+        [ProducesResponseType(typeof(IReadOnlyList<OrderToResturnDto>), 200)]
         public async Task<ActionResult<IReadOnlyList<OrderToResturnDto>>> GetAllOrders()
         {
             var orders = await _orderServices.GetAllOrdersAsync();
@@ -44,8 +44,8 @@ namespace OrderManagementSystem.API.Controllers
             return Ok(mappedOrder);
         }
         [HttpGet("{orderId}")]
-        [ProducesResponseType(typeof(UserDto), 200)]
-        [ProducesResponseType(typeof(OrderToResturnDto), 404)]
+        [ProducesResponseType(typeof(OrderToResturnDto), 200)]
+        [ProducesResponseType(typeof(ErrorApiResponse), 404)]
         public async Task<ActionResult<OrderToResturnDto>> GetOrder(int orderId)
         {
             var order = await _orderServices.GetOrderById(orderId);
